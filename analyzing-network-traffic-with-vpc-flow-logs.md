@@ -4,17 +4,17 @@
 
 1. Step 1: Create a custom  vpc network   
 
-       gcloud compute networks create vpc-net --subnet-mode=CUSTOM --description="My custom network"
+        gcloud compute networks create vpc-net --subnet-mode=CUSTOM --description="My custom network"
 
 
 2. Step 2: Create subnet in custom vpc
     
-       gcloud compute newtorks subnets create vpc-subnet --region=us-central1 --range="10.1.3.0/24" --enable-flow-logs
+        gcloud compute newtorks subnets create vpc-subnet --region=us-central1 --range="10.1.3.0/24" --enable-flow-logs
 
 
 3. Step 3: Create a firewall rule
    
-       gcloud compute firewall-rules create allow-http-ssh --network=vpc-net --target-tags="http-server" --direction=INGRESS --source-ranges="0.0.0.0/0" --rules=tcp:80,tcp:22" --action=ALLOW
+        gcloud compute firewall-rules create allow-http-ssh --network=vpc-net --target-tags="http-server" --direction=INGRESS --source-ranges="0.0.0.0/0" --rules=tcp:80,tcp:22" --action=ALLOW
 
 
 ## Task 2. Create an Apache web server
@@ -47,9 +47,7 @@
 
 2. Step 2: Access the vpc flow logs
 
-         dig +short myip.opendns.com @resolver1.opendns.com # Get the your own ip 
-
-         gcloud logging read 'resource.type="gce_subnetwork" AND logName="projects/gads-2020/logs/compute.googleapis.com%2Fvpc_flows" AND "217.117.10.94"' --format=json --limit=1
+         export MYIP=$(echo dig +short myip.opendns.com @resolver1.opendns.com) && gcloud logging read 'resource.type="gce_subnetwork" AND logName="projects/gads-2020/logs/compute.googleapis.com%2Fvpc_flows" AND jsonPayload.connection.dest_ip:'${MYIP} --format=json --limit=1
 
 
 ## Task 4. Export the network traffic to BigQuery to further analyze the logs
