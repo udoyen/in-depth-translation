@@ -2,27 +2,19 @@
 
 ## Task 1. Configure a custom network with VPC Flow Logs
 
-1. Step 1: Create a custom  vpc network
+1. Step 1: Create a custom  vpc network   
 
-   
-
-    gcloud compute networks create vpc-net --subnet-mode=CUSTOM --description="My custom network"
+       gcloud compute networks create vpc-net --subnet-mode=CUSTOM --description="My custom network"
 
 
 2. Step 2: Create subnet in custom vpc
-
-
-
     
-    gcloud compute newtorks subnets create vpc-subnet --region=us-central1 --range="10.1.3.0/24" --enable-flow-logs
+       gcloud compute newtorks subnets create vpc-subnet --region=us-central1 --range="10.1.3.0/24" --enable-flow-logs
 
 
 3. Step 3: Create a firewall rule
-
-
-
    
-    gcloud compute firewall-rules create allow-http-ssh --network=vpc-net --target-tags="http-server" --direction=INGRESS --source-ranges="0.0.0.0/0" --rules=tcp:80,tcp:22" --action=ALLOW
+       gcloud compute firewall-rules create allow-http-ssh --network=vpc-net --target-tags="http-server" --direction=INGRESS --source-ranges="0.0.0.0/0" --rules=tcp:80,tcp:22" --action=ALLOW
 
 
 ## Task 2. Create an Apache web server
@@ -31,17 +23,18 @@
 
 
    
-    gcloud compute instances create web-server --zone=us-central1-c  --machine-type="f1-micro"  --tags="http-server" --network=vpc-net --subnet=vpc-subnet
+       gcloud compute instances create web-server --zone=us-central1-c  --machine-type="f1-micro"  --tags="http-server" --network=vpc-net --subnet=vpc-subnet
 
 
 2. Step 2: Install the Apache server
 
 
-
-         gcloud compute ssh web-server
-	 
-
-	 sudo apt-get update && sudo apt-get install apache2 -y && echo '<!doctype html><html><body><h1>Hello World!</h1></body></html>' | sudo tee /var/www/html/index.html' && exit
+        
+	   gcloud compute ssh web-server
+	
+	   sudo apt-get update && sudo apt-get install apache2 -y && echo '<!doctype html><html><body><h1>Hello World!</h1></body></html>' | sudo tee /var/www/html/index.html' && exit
+	
+	
 
 
 ## Task 3. Verify that network traffic is logged
@@ -64,10 +57,11 @@
 1. Step 1: Create a sink from your logs to BigQuery
 
 
-        bq mk bq_vpcflows
-	
+        
+	   bq mk bq_vpcflows	
 
-	gcloud logging sinks create vpc-flows bigquery.googleapis.com/projects/$(gcloud info | grep project | cut -d":" -f2 | cut -d"]" -f1 | cut -d"[" -f2)/datasets/bq_vpcflows --log-filter='resource.type="gce_subnetwork" AND logName=projects/gads-2020/logs/compute.googleapis.com%2Fvpc_flows AND "217.117.10.94"'
+	   gcloud logging sinks create vpc-flows bigquery.googleapis.com/projects/$(gcloud info | grep project | cut -d":" -f2 | cut -d"]" -f1 | cut -d"[" -f2)/datasets/bq_vpcflows --log-filter='resource.type="gce_subnetwork" AND logName=projects/gads-2020/logs/compute.googleapis.com%2Fvpc_flows AND "217.117.10.94"'
+	
 
 
 2. Step 2: Repeat Step 1 of Task 3
