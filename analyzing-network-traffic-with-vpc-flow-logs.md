@@ -48,6 +48,8 @@
 2. Step 2: Access the vpc flow logs
 
          export MYIP=$(echo dig +short myip.opendns.com @resolver1.opendns.com) && gcloud logging read 'resource.type="gce_subnetwork" AND logName="projects/gads-2020/logs/compute.googleapis.com%2Fvpc_flows" AND jsonPayload.connection.dest_ip:'${MYIP} --format=json --limit=1
+         # OR
+         export MYIP=$(echo dig +short myip.opendns.com @resolver1.opendns.com) && gcloud logging read 'resource.type="gce_subnetwork" AND logName="projects/gads-2020/logs/compute.googleapis.com%2Fvpc_flows" AND '\"${MYIP}\" --format=json --limit=1
 
 
 ## Task 4. Export the network traffic to BigQuery to further analyze the logs
